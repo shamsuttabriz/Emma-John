@@ -18,7 +18,7 @@ const Products = (props) => {
             </div>
             <button
                 onClick={() => handleAddToCart(props.product)}
-                className='text-slate-800 font-semibold w-full bg-[#EBEEEF] hover:bg-[#ff735e] px-3 py-2 rounded-b-md duration-300 absolute bottom-0 flex justify-center item-center border-t-2 border-[#F05941]'
+                className='text-slate-800 font-semibold w-full bg-[#F05941] hover:bg-[#EBEEEF] px-3 py-2 rounded-b-md duration-300 absolute bottom-0 flex justify-center item-center border-t-2 border-slate-500'
             >
                 Add To Cart
                 <span className='pl-2 pt-[5px] text-lg'> <MdShoppingCart /></span>

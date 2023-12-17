@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Product from '../Product/Product';
+import Cart from '../Cart/Cart';
+import { addToDb, getShoppingCart } from '../../utilities/fakedb';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
@@ -12,9 +14,35 @@ const Shop = () => {
     }, []);
 
     const handleAddToCart = (product) => {
-        const newCart = [...cart, product];
+        let newCart = [];
+        // const newCart = [...cart, product];
+        const existing = cart.find(pd => pd.id !== product.id);
+        if (!existing) {
+            product.quantity = 1;
+            newCart = [...cart, product];
+        }
+        else {
+            existing.quantity = existing.quantity + 1;
+            const remaining = cart.filter(pd => pd.id !== product.id);
+            newCart = [...remaining, existing];
+        }
         setCart(newCart);
+        addToDb(product.id)
     }
+
+    useEffect(() => {
+        const storedCart = getShoppingCart();
+        const savedCart = [];
+        for (const id in storedCart) {
+            const addedProduct = products.find(product => product.id === id);
+            if (addedProduct) {
+                const quantity = storedCart[id];
+                addedProduct.quantity = quantity;
+                savedCart.push(addedProduct);
+            }
+        }
+        setCart(savedCart);
+    }, [products]);
 
     return (
         <div className='w-full text-orange-500'>
@@ -28,11 +56,8 @@ const Shop = () => {
                         ></Product>)
                     }
                 </div>
-                <div className='w-[20%] hidden lg:block bg-slate-300 ml-5'>
-                    <div className=''>
-                        <h1 className='text-[#F05941] text-lg font-bold '>Order Summary</h1>
-                        <p>Selected Item: {cart.length}</p>
-                    </div>
+                <div className='w-[20%] hidden lg:block bg-slate-300 ml-4 rounded-md p-2 sticky top-0'>
+                    <Cart cart={cart} />
                 </div>
             </div>
         </div >
